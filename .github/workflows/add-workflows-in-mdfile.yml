@@ -7,6 +7,17 @@
 # of the `run` task to point to the appropriate markdown file.
 # To enable creating automated PRs, uncomment the "Create Pull Request" section below.
 
+# Here's something a bit non-standard: You can actually create a description for a given
+# workflow if it's within the @description_start and @description_end block.
+# Github Actions will not parse this block, but the add-workflow-to-mdfile script will!
+# Please make sure that the tags are written EXACTLY as shown below, or else
+# the script will not pull the description properly
+
+# @description_start
+# Create a simple table inside your README.md file that contains a list
+# of with all manually dispatchable workflows.
+# @description_end
+
 name: Add workflows in README.md
 
 on:
@@ -28,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v1
       # If you wish to target a different markdown file, replace `./README.md` with your desired file.
-      - run: deno run --allow-read --allow-env --allow-write https://raw.githubusercontent.com/xdrdak/add-workflows-to-mdfile/2.0/mod.ts ./README.md
+      - run: deno run --allow-read --allow-env --allow-write https://raw.githubusercontent.com/xdrdak/add-workflows-to-mdfile/3.0/mod.ts ./README.md
 # Uncomment this section to create a PR whenever this workflow gets triggered
 #      - name: Create Pull Request
 #        uses: peter-evans/create-pull-request@v3
