@@ -27,7 +27,8 @@ function renderActionsTable(githubRepo: string, workflows: GithubWorkflow[]) {
 
   const contentRows = workflows
     .map(({ name, description, filename }) => {
-      const url = `https://github.com/${githubRepo}/actions/workflows/${filename}`;
+      const url =
+        `https://github.com/${githubRepo}/actions/workflows/${filename}`;
       const link = mdLink("View action", url);
 
       const row = [name, description || "No description", link];
