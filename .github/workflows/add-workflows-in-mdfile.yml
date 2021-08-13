@@ -1,0 +1,41 @@
+# How to use?
+# Simply copy this file as is into your github repository and ensure that you have
+# somewhere in your file the following content: <!--actions-begin--><!--actions-end-->
+# To enable automatically updating the root readme config, you can
+# uncomment the on.push section below.
+# If you wish to inject the actions table to a different file, you can modify the last parameter
+# of the `run` task to point to the appropriate markdown file.
+# To enable creating automated PRs, uncomment the "Create Pull Request" section below.
+
+
+name: Add actions in mdfile
+
+description: Read all workflow files, identify which can be manually dispatched and document them in an arbitrary markdown file.
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Uncomment the "push" section to trigger automatically this job whenever a workflow changes.
+# Please note, you also may want to uncomment the section that creates the pull request as well
+# or else nothing will actually get pushed
+#  push:
+#    paths:
+#      - '.github/workflows/*.yml'
+
+jobs:
+  try:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+      # If you wish to target a different markdown file, replace `./README.md` with your desired file.
+      - run: deno run --allow-read --allow-env --allow-write https://raw.githubusercontent.com/xdrdak/add-workflows-to-mdfile/1.0/mod.ts ./README.md
+# Uncomment this section to create a PR whenever this workflow gets triggered
+#      - name: Create Pull Request
+#        uses: peter-evans/create-pull-request@v3
+#        with:
+#          branch: auto-${{ github.run_id }}
+#          title: Update the workflows table in README.md.
+#          body: Update the workflows table in README.md. Please note that this PR is automatically generated.
