@@ -3,13 +3,11 @@ import { parse } from "https://deno.land/std@0.103.0/encoding/yaml.ts";
 type YamlFile = {
   on: Record<string, unknown>;
   name: string;
-  description?: string;
 };
 
 type GithubWorkflow = {
   filename: string;
   name: string;
-  description?: string;
 };
 
 function wrap(subject: string, w: string) {
@@ -21,17 +19,17 @@ function mdLink(content: string, url: string) {
 }
 
 function renderActionsTable(githubRepo: string, workflows: GithubWorkflow[]) {
-  const columns = ["Workflow name", "Description", "Links"];
+  const columns = ["Workflow name", "Links"];
   const headerRow = columns.join("|");
   const dividerRow = columns.map((_) => "-").join("|");
 
   const contentRows = workflows
-    .map(({ name, description, filename }) => {
+    .map(({ name, filename }) => {
       const url =
         `https://github.com/${githubRepo}/actions/workflows/${filename}`;
       const link = mdLink("View action", url);
 
-      const row = [name, description || "No description", link];
+      const row = [name, link];
       return row.join("|");
     })
     .join("\n");
@@ -78,7 +76,6 @@ for await (const dirEntry of Deno.readDir(".github/workflows")) {
       workflows.push({
         filename: name,
         name: yaml.name,
-        description: yaml.description,
       });
     }
   }
