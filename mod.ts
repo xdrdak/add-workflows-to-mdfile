@@ -8,6 +8,7 @@ type YamlFile = {
 type GithubWorkflow = {
   filename: string;
   name: string;
+  description: string;
 };
 
 function wrap(subject: string, w: string) {
@@ -19,17 +20,16 @@ function mdLink(content: string, url: string) {
 }
 
 function renderActionsTable(githubRepo: string, workflows: GithubWorkflow[]) {
-  const columns = ["Workflow name", "Links"];
+  const columns = ["Workflow name", "Description", "Links"];
   const headerRow = columns.join("|");
   const dividerRow = columns.map((_) => "-").join("|");
 
   const contentRows = workflows
-    .map(({ name, filename }) => {
-      const url =
-        `https://github.com/${githubRepo}/actions/workflows/${filename}`;
+    .map(({ name, description, filename }) => {
+      const url = `https://github.com/${githubRepo}/actions/workflows/${filename}`;
       const link = mdLink("View action", url);
 
-      const row = [name, link];
+      const row = [name, description, link];
       return row.join("|");
     })
     .join("\n");
@@ -54,6 +54,18 @@ function replaceActionsSection(markdown: string, injection: string) {
   return nextMarkdown;
 }
 
+function getDescription(markdown: string) {
+  const result = markdown.match(/# @description_start(.*)# @description_end/s);
+  const description = result && result[1] ? result[1] : "";
+  const parsedDescription = description
+    .split("\n")
+    .map((d) => d.replace("#", ""))
+    .join("")
+    .trim();
+
+  return parsedDescription;
+}
+
 const [path] = Deno.args;
 const decoder = new TextDecoder("utf-8");
 const encoder = new TextEncoder();
@@ -73,9 +85,11 @@ for await (const dirEntry of Deno.readDir(".github/workflows")) {
     // If we find the workflow_dispatch, it means we can manually
     // trigger this workflow.
     if ("workflow_dispatch" in yaml.on) {
+      const description = getDescription(decoder.decode(workflow));
       workflows.push({
         filename: name,
         name: yaml.name,
+        description,
       });
     }
   }
