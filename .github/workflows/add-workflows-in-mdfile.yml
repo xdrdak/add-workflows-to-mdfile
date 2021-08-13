@@ -44,6 +44,6 @@ jobs:
 #      - name: Create Pull Request
 #        uses: peter-evans/create-pull-request@v3
 #        with:
-#          branch: auto-${{ github.run_id }}
+#          branch: update-workflow-table-${{ github.run_id }}
 #          title: Update the workflows table in README.md.
 #          body: Update the workflows table in README.md. Please note that this PR is automatically generated.
