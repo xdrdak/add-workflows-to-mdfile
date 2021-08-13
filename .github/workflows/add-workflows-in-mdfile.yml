@@ -7,7 +7,7 @@
 # of the `run` task to point to the appropriate markdown file.
 # To enable creating automated PRs, uncomment the "Create Pull Request" section below.
 
-name: Add actions in mdfile
+name: Add workflows in README.md
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -21,7 +21,7 @@ on:
 #      - '.github/workflows/*.yml'
 
 jobs:
-  try:
+  update-markdown-with-workflow-triggers:
     runs-on: ubuntu-latest
 
     steps:
